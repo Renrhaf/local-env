@@ -18,10 +18,10 @@ services:
     container_name: redis-admin
     restart: always
     labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=traefik_net"
-        - "traefik.http.routers.redisadmin.rule=Host(`redis-admin.docker.localhost`)"
-        - "traefik.http.routers.redisadmin.tls=true"
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_net"
+      - "traefik.http.routers.redisadmin.rule=Host(`redis-admin.docker.localhost`)"
+      - "traefik.http.routers.redisadmin.tls=true"
     networks:
       - traefik_net
       - redis_net
