@@ -1,0 +1,46 @@
+version: "3"
+services:
+  elasticsearch:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.8.0"
+    container_name: elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "discovery.type=single-node"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - elk_net
+
+  kibana:
+    image: "docker.elastic.co/kibana/kibana:7.8.0"
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_net"
+      - "traefik.http.routers.elk.rule=Host(`elk.docker.localhost`)"
+      - "traefik.http.routers.elk.tls=true"
+      - "traefik.http.services.elk.loadbalancer.server.port=5601"
+    networks:
+      - elk_net
+      - traefik_net
+
+  filebeat:
+    image: "docker.elastic.co/beats/filebeat:7.8.0"
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - elk_net
+
+volumes:
+  elasticsearch_data:
+networks:
+  elk_net:
+    external: true
+  traefik_net:
+    external: true

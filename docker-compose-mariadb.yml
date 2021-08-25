@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  mariadb:
+    image: mariadb:10.5
+    ports:
+      - "3306:3306"
+    container_name: mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlroot
+      - MYSQL_USER=mysqlusr
+      - MYSQL_PASSWORD=mysqlpwd
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./conf:/etc/mysql/conf.d
+    networks:
+      - mariadb_net
+
+networks:
+  mariadb_net:
+    external: true

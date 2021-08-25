@@ -1,0 +1,10 @@
+
+# Ignore database data
+postgres
+mysql
+
+# Dumps
+dumps/*
+
+# IDE
+.idea

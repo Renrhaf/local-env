@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  adminer:
+    image: library/adminer:latest
+    container_name: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+      ADMINER_PLUGINS: "dump-zip tables-filter translation"
+      ADMINER_DESIGN: "rmsoft_blue"
+    labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_net"
+        - "traefik.http.routers.adminer.rule=Host(`adminer.docker.localhost`)"
+        - "traefik.http.routers.adminer.tls=true"
+    networks:
+      - traefik_net
+      - mariadb_net
+      - postgres_net
+    restart: always
+
+networks:
+  traefik_net:
+    external: true
+  mariadb_net:
+    external: true
+  postgres_net:
+    external: true

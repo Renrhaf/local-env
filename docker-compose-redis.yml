@@ -1,0 +1,36 @@
+version: '3.7'
+
+services:
+  redis:
+    image: redis:5
+    container_name: redis
+    restart: always
+    volumes:
+      - ./data:/data
+      - ./conf/redis.conf:/usr/local/etc/redis/conf/redis.conf
+    command: redis-server /usr/local/etc/redis/conf/redis.conf
+    networks:
+      - redis_net
+      - internal
+
+  phpredisadmin:
+    image: tehes/docker-phpredisadmin
+    container_name: redis-admin
+    restart: always
+    labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik_net"
+        - "traefik.http.routers.redisadmin.rule=Host(`redis-admin.docker.localhost`)"
+        - "traefik.http.routers.redisadmin.tls=true"
+    networks:
+      - traefik_net
+      - redis_net
+      - internal
+
+networks:
+  internal:
+    internal: true
+  redis_net:
+    external: true
+  traefik_net:
+    external: true
