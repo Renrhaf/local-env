@@ -4,7 +4,7 @@ services:
   redis:
     image: redis:5
     container_name: redis
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./data:/data
       - ./conf/redis.conf:/usr/local/etc/redis/conf/redis.conf
@@ -16,7 +16,7 @@ services:
   phpredisadmin:
     image: tehes/docker-phpredisadmin
     container_name: redis-admin
-    restart: always
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_net"
